@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: openfinance-hub
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/openfinance
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+server:
+  port: 8080
+
+security:
+  jwt:
+    secret: openfinance-secret-key-2026-muito-segura
+    expiration: 86400000
+
+openfinance:
+  rabbitmq:
+    queues:
+      transactions: transactions.queue
+      pix: pix.queue
+      alerts: alerts.queue
+    exchanges:
+      transactions: transactions.exchange
+      pix: pix.exchange
