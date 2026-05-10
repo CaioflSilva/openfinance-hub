@@ -129,7 +129,33 @@ git clone https://github.com/CaioflSilva/openfinance-hub.git
 cd openfinance-hub
 ```
 
-### 2. Suba a infraestrutura
+### 2. Configure as variáveis de ambiente
+
+```bash
+cp .env.example .env
+```
+
+Edite o `.env` com os valores reais:
+
+| Variável | Descrição | Exemplo |
+|---|---|---|
+| `DB_PASSWORD` | Senha do PostgreSQL | `postgres` |
+| `RABBITMQ_PASSWORD` | Senha do RabbitMQ | `guest` |
+| `JWT_SECRET` | Secret HMAC-SHA256 em base64 (256 bits) | veja abaixo |
+| `JWT_EXPIRATION` | Tempo de expiração do token em ms | `86400000` (24h) |
+
+Para gerar um `JWT_SECRET` seguro:
+```bash
+# Linux/macOS
+openssl rand -base64 32
+
+# PowerShell
+[Convert]::ToBase64String((1..32 | ForEach-Object { [byte](Get-Random -Max 256) }))
+```
+
+> **Nunca commite o `.env`** — ele já está no `.gitignore`.
+
+### 3. Suba a infraestrutura
 
 ```bash
 docker-compose up -d
@@ -140,7 +166,7 @@ Isso vai iniciar:
 - RabbitMQ na porta `5672` (Management UI: `15672`)
 - Redis na porta `6379`
 
-### 3. Rode a aplicação
+### 4. Rode a aplicação
 
 ```bash
 ./mvnw spring-boot:run
