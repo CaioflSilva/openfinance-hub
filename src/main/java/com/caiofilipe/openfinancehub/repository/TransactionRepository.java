@@ -26,4 +26,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
     @Query("SELECT t FROM Transaction t WHERE t.bankAccount.user.id = :userId " +
             "AND t.createdAt BETWEEN :start AND :end")
     List<Transaction> findByUserIdAndDateRange(UUID userId, LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT t FROM Transaction t WHERE t.bankAccount.user.id = :userId ORDER BY t.createdAt DESC")
+    List<Transaction> findAllByUserId(UUID userId);
 }
