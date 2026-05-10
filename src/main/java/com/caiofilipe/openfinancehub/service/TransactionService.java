@@ -16,6 +16,7 @@ import com.caiofilipe.openfinancehub.repository.BankAccountRepository;
 import com.caiofilipe.openfinancehub.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ public class TransactionService {
     private final RabbitTemplate rabbitTemplate;
 
     @Transactional
+    @CacheEvict(value = "dashboard-summary", key = "#user.id.toString()")
     public TransactionResponse create(TransactionRequest request, User user) {
         BankAccount account = bankAccountRepository.findById(request.getBankAccountId())
                 .orElseThrow(() -> new ResourceNotFoundException("Conta bancária não encontrada"));
