@@ -1,13 +1,10 @@
 package com.caiofilipe.openfinancehub;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class OpenfinanceHubApplicationTests {
+class OpenfinanceHubApplicationTests extends IntegrationTest {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void contextLoads() {
+    }
 }
