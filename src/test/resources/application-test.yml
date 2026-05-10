@@ -1,0 +1,16 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+      direct:
+        auto-startup: false
+
+app:
+  jwt:
+    secret: test-secret-key-for-testing-only-needs-to-be-at-least-256-bits-long
+    expiration: 86400000
