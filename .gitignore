@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Environment secrets (never commit the real .env) ###
+.env
+.env.local
+.env.*.local
+
+### Java bytecode ###
+*.class
+*.DS_Store
