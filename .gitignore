@@ -32,6 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 
+### Claude Code local config ###
+.claude/
+
 ### Environment secrets (never commit the real .env) ###
 .env
 .env.local

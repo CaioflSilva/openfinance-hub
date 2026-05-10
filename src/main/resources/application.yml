@@ -3,9 +3,9 @@ spring:
     name: openfinance-hub
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/openfinance
+    url: jdbc:postgresql://127.0.0.1:5432/openfinance
     username: postgres
-    password: postgres
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -21,7 +21,7 @@ spring:
     host: localhost
     port: 5672
     username: guest
-    password: guest
+    password: ${RABBITMQ_PASSWORD:guest}
 
   data:
     redis:
@@ -32,10 +32,10 @@ spring:
 server:
   port: 8080
 
-security:
+app:
   jwt:
-    secret: openfinance-secret-key-2026-muito-segura
-    expiration: 86400000
+    secret: ${JWT_SECRET:fallback-only-for-tests-do-not-use-in-prod}
+    expiration: ${JWT_EXPIRATION:86400000}
 
 openfinance:
   rabbitmq:
