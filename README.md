@@ -56,16 +56,32 @@ O **OpenFinance Hub** foi desenvolvido para simular exatamente esse cenário, ap
 
 ---
 
-## ✨ Funcionalidades
+## 🚀 Tech Stack
 
-- 🔐 **Autenticação segura** com Spring Security + JWT
-- 🏦 **Múltiplas contas bancárias** por usuário (corrente, poupança, investimento)
-- ⚡ **Processamento assíncrono** de transações com RabbitMQ
-- 🗄️ **Cache inteligente** de saldos e consultas com Redis
-- 🏷️ **Categorização automática** de gastos (alimentação, transporte, saúde...)
-- 📊 **Dashboard consolidado** com saldo total e resumo por categoria
-- 🔔 **Alertas de risco** para gastos acima do padrão
-- 💸 **Simulação de PIX** com processamento em fila
+![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5-6DB33F?style=flat-square&logo=springboot&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-7-DC382D?style=flat-square&logo=redis&logoColor=white)
+![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3-FF6600?style=flat-square&logo=rabbitmq&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker_Compose-2496ED?style=flat-square&logo=docker&logoColor=white)
+![JUnit5](https://img.shields.io/badge/JUnit-5-25A162?style=flat-square&logo=junit5&logoColor=white)
+![Mockito](https://img.shields.io/badge/Mockito-5-C5B4E3?style=flat-square)
+![Testcontainers](https://img.shields.io/badge/Testcontainers-black?style=flat-square&logo=docker&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?style=flat-square&logo=githubactions&logoColor=white)
+
+---
+
+## ✨ Features
+
+- 🔐 **JWT stateless auth** — register + login com BCrypt, token assinado via HMAC-SHA256
+- 🏦 **Gestão de contas bancárias** — CRUD com ownership validation (403 se não for o dono)
+- ⚡ **Processamento assíncrono** — transações publicadas em fila RabbitMQ e consumidas em background
+- 🗄️ **Cache Redis** — dashboard com TTL de 5 minutos via `@Cacheable` e `@CacheEvict` na criação de transações
+- 📊 **Dashboard consolidado** — resumo de gastos por categoria em tempo real
+- 🛡️ **Tratamento global de erros** — 404 ResourceNotFoundException, 403 ForbiddenException
+- 🧪 **15 testes automatizados** — 3 suítes unitárias (Mockito) + 2 de integração (Testcontainers + PostgreSQL real)
+- ⚙️ **CI/CD** — GitHub Actions executa os testes em todo push/PR para `main`
+- 🔑 **Secrets via .env** — nenhuma credencial hardcoded; `spring-dotenv` carrega o `.env` automaticamente
 
 ---
 
@@ -176,54 +192,37 @@ A API estará disponível em: `http://localhost:8080`
 
 ---
 
-## 📋 Endpoints
+## 📡 API Endpoints
 
 ### Auth
-| Método | Endpoint | Descrição |
-|---|---|---|
-| POST | `/api/auth/register` | Cadastro de usuário |
-| POST | `/api/auth/login` | Login e geração de token JWT |
+| Método | Rota | Descrição | JWT |
+|---|---|---|---|
+| `POST` | `/api/auth/register` | Registrar novo usuário | Não |
+| `POST` | `/api/auth/login` | Autenticar e obter token JWT | Não |
 
 ### Contas Bancárias
-| Método | Endpoint | Descrição |
-|---|---|---|
-| POST | `/api/accounts` | Conectar nova conta bancária |
-| GET | `/api/accounts` | Listar todas as contas do usuário |
-| GET | `/api/accounts/{id}` | Detalhes de uma conta |
-| DELETE | `/api/accounts/{id}` | Remover conta |
+| Método | Rota | Descrição | JWT |
+|---|---|---|---|
+| `POST` | `/api/bank-accounts` | Criar conta bancária | Sim |
+| `GET` | `/api/bank-accounts` | Listar contas do usuário autenticado | Sim |
+| `GET` | `/api/bank-accounts/{id}` | Detalhes de uma conta (ownership check) | Sim |
+| `DELETE` | `/api/bank-accounts/{id}` | Remover conta (ownership check) | Sim |
 
 ### Transações
-| Método | Endpoint | Descrição |
-|---|---|---|
-| POST | `/api/transactions` | Registrar transação (vai para fila) |
-| GET | `/api/transactions` | Listar transações com filtros |
-| POST | `/api/transactions/pix` | Simular transação PIX |
+| Método | Rota | Descrição | JWT |
+|---|---|---|---|
+| `POST` | `/api/transactions` | Criar transação (publica em fila RabbitMQ) | Sim |
+| `GET` | `/api/transactions` | Listar transações do usuário autenticado | Sim |
+| `GET` | `/api/transactions/account/{accountId}` | Transações de uma conta específica | Sim |
+| `GET` | `/api/transactions/{id}` | Detalhes de uma transação | Sim |
 
 ### Dashboard
-| Método | Endpoint | Descrição |
-|---|---|---|
-| GET | `/api/dashboard` | Saldo consolidado e resumo |
-| GET | `/api/dashboard/summary` | Gastos por categoria |
-| GET | `/api/dashboard/alerts` | Alertas de risco financeiro |
+| Método | Rota | Descrição | JWT |
+|---|---|---|---|
+| `GET` | `/api/dashboard/summary` | Resumo consolidado (Redis cache 5 min) | Sim |
 
 ---
 
-## 🗺️ Roadmap
-
-- [x] Setup do projeto
-- [ ] Configuração Docker Compose
-- [ ] Configuração Spring Security + JWT
-- [ ] Models e Repositories
-- [ ] Autenticação (register/login)
-- [ ] CRUD de contas bancárias
-- [ ] Processamento de transações com RabbitMQ
-- [ ] Cache com Redis
-- [ ] Dashboard consolidado
-- [ ] Alertas de risco
-- [ ] Simulação PIX
-- [ ] Testes unitários e de integração
-
----
 
 ## 👨‍💻 Autor
 
