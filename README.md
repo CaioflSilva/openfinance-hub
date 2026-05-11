@@ -9,7 +9,7 @@
 ![Docker](https://img.shields.io/badge/Docker-compose-blue?style=for-the-badge&logo=docker)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-> API REST que simula um hub de Open Finance — consolida múltiplas contas bancárias, processa transações de forma assíncrona, categoriza gastos automaticamente e emite alertas de risco financeiro em tempo real.
+> API REST que simula um hub de Open Finance — autentica usuários com JWT, gerencia múltiplas contas bancárias, processa transações de forma assíncrona via RabbitMQ e fornece dashboard consolidado com cache Redis.
 
 ---
 
