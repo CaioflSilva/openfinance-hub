@@ -1,6 +1,6 @@
 # 🏦 OpenFinance Hub API
 
-![CI](https://github.com/CaioflSilva/openfinance-hub/actions/workflows/ci.yml/badge.svg)
+[![CI](https://github.com/CaioflSilva/openfinance-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/CaioflSilva/openfinance-hub/actions/workflows/ci.yml)
 ![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.14-green?style=for-the-badge&logo=springboot)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue?style=for-the-badge&logo=postgresql)
