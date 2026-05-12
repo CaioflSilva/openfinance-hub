@@ -28,30 +28,14 @@ O **OpenFinance Hub** foi desenvolvido para simular exatamente esse cenário, ap
 
 ## 🏗️ Arquitetura
 
-```
-┌─────────────────────────────────────────────────────┐
-│                    CLIENT (REST)                     │
-└─────────────────────┬───────────────────────────────┘
-                      │ HTTP
-┌─────────────────────▼───────────────────────────────┐
-│              SPRING SECURITY + JWT                   │
-│                  (Auth Layer)                        │
-└─────────────────────┬───────────────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────────────┐
-│                  CONTROLLERS                         │
-│     /auth  /accounts  /transactions  /dashboard      │
-└──────┬──────────────┬──────────────┬────────────────┘
-       │              │              │
-┌──────▼──────┐ ┌─────▼──────┐ ┌────▼────────────────┐
-│   SERVICE   │ │   REDIS    │ │     RABBITMQ         │
-│   LAYER     │ │  (Cache)   │ │  (Async Processing)  │
-└──────┬──────┘ └────────────┘ └────────────────────┬─┘
-       │                                             │
-┌──────▼─────────────────────────────────────────────▼─┐
-│                    PostgreSQL                          │
-│         users │ bank_accounts │ transactions           │
-└───────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    Client["Client (REST)"] -->|HTTP| API["Spring Boot API\n(Spring Security + JWT)"]
+    API --> PG[(PostgreSQL)]
+    API --> Redis[(Redis Cache)]
+    API -->|publish event| MQ[RabbitMQ]
+    MQ --> Listener["TransactionListener\n(consumer)"]
+    Listener --> PG
 ```
 
 ---
