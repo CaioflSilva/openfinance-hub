@@ -35,7 +35,7 @@ class TransactionFlowIntegrationTest extends IntegrationTest {
         RegisterRequest reg = new RegisterRequest();
         reg.setName("Flow User");
         reg.setEmail("flow-" + UUID.randomUUID() + "@test.com");
-        reg.setPassword("senha123");
+        reg.setPassword("Senha123");
 
         MvcResult regResult = mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)

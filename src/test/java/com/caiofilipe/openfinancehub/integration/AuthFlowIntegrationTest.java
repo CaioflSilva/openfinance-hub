@@ -24,7 +24,7 @@ class AuthFlowIntegrationTest extends IntegrationTest {
         RegisterRequest req = new RegisterRequest();
         req.setName("Integration User");
         req.setEmail("auth-" + UUID.randomUUID() + "@test.com");
-        req.setPassword("senha123");
+        req.setPassword("Senha123");
         return req;
     }
 
