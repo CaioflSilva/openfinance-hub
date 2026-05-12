@@ -37,6 +37,12 @@ app:
     secret: ${JWT_SECRET:fallback-only-for-tests-do-not-use-in-prod}
     expiration: ${JWT_EXPIRATION:86400000}
 
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
 openfinance:
   rabbitmq:
     queues:

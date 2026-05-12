@@ -4,6 +4,8 @@ import com.caiofilipe.openfinancehub.dto.request.TransactionRequest;
 import com.caiofilipe.openfinancehub.dto.response.TransactionResponse;
 import com.caiofilipe.openfinancehub.model.User;
 import com.caiofilipe.openfinancehub.service.TransactionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,11 +19,13 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/transactions")
 @RequiredArgsConstructor
+@Tag(name = "Transactions", description = "Criação e consulta de transações financeiras")
 public class TransactionController {
 
     private final TransactionService transactionService;
 
     @PostMapping
+    @Operation(summary = "Criar transação (publicada em fila RabbitMQ para processamento assíncrono)")
     public ResponseEntity<TransactionResponse> create(
             @Valid @RequestBody TransactionRequest request,
             @AuthenticationPrincipal User user) {
@@ -29,11 +33,13 @@ public class TransactionController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar todas as transações do usuário autenticado")
     public ResponseEntity<List<TransactionResponse>> listAll(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(transactionService.listByUser(user));
     }
 
     @GetMapping("/account/{accountId}")
+    @Operation(summary = "Listar transações de uma conta específica")
     public ResponseEntity<List<TransactionResponse>> listByAccount(
             @PathVariable UUID accountId,
             @AuthenticationPrincipal User user) {
@@ -41,6 +47,7 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar transação por ID")
     public ResponseEntity<TransactionResponse> getById(
             @PathVariable UUID id,
             @AuthenticationPrincipal User user) {

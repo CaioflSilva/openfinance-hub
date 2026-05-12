@@ -4,6 +4,8 @@ import com.caiofilipe.openfinancehub.dto.request.BankAccountRequest;
 import com.caiofilipe.openfinancehub.dto.response.BankAccountResponse;
 import com.caiofilipe.openfinancehub.model.User;
 import com.caiofilipe.openfinancehub.service.BankAccountService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,11 +19,13 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/bank-accounts")
 @RequiredArgsConstructor
+@Tag(name = "Bank Accounts", description = "Gerenciamento de contas bancárias")
 public class BankAccountController {
 
     private final BankAccountService bankAccountService;
 
     @PostMapping
+    @Operation(summary = "Criar nova conta bancária")
     public ResponseEntity<BankAccountResponse> create(
             @Valid @RequestBody BankAccountRequest request,
             @AuthenticationPrincipal User user) {
@@ -29,11 +33,13 @@ public class BankAccountController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar contas do usuário autenticado")
     public ResponseEntity<List<BankAccountResponse>> listAll(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(bankAccountService.listByUser(user));
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar conta por ID (com ownership check)")
     public ResponseEntity<BankAccountResponse> getById(
             @PathVariable UUID id,
             @AuthenticationPrincipal User user) {
@@ -41,6 +47,7 @@ public class BankAccountController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Remover conta bancária")
     public ResponseEntity<Void> delete(
             @PathVariable UUID id,
             @AuthenticationPrincipal User user) {
