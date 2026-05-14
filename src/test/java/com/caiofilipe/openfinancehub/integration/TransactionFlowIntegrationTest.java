@@ -97,6 +97,7 @@ class TransactionFlowIntegrationTest extends IntegrationTest {
         mockMvc.perform(get("/api/transactions/account/" + accountId)
                         .header("Authorization", authHeader))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1));
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.totalElements").value(1));
     }
 }

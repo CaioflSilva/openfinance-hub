@@ -4,6 +4,7 @@ import com.caiofilipe.openfinancehub.model.Transaction;
 import com.caiofilipe.openfinancehub.model.TransactionCategory;
 import com.caiofilipe.openfinancehub.model.TransactionStatus;
 import com.caiofilipe.openfinancehub.model.TransactionType;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +17,7 @@ import java.util.UUID;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
-    List<Transaction> findByBankAccountId(UUID bankAccountId);
+    Page<Transaction> findByBankAccountId(UUID bankAccountId, Pageable pageable);
     List<Transaction> findByBankAccountIdAndStatus(UUID bankAccountId, TransactionStatus status);
     List<Transaction> findByBankAccountIdAndCategory(UUID bankAccountId, TransactionCategory category);
 
@@ -30,7 +31,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
     List<Transaction> findByUserIdAndDateRange(UUID userId, LocalDateTime start, LocalDateTime end);
 
     @Query("SELECT t FROM Transaction t WHERE t.bankAccount.user.id = :userId ORDER BY t.createdAt DESC")
-    List<Transaction> findAllByUserId(UUID userId);
+    Page<Transaction> findAllByUserId(UUID userId, Pageable pageable);
 
     @Query("SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t " +
             "WHERE t.bankAccount.user.id = :userId AND t.type IN :types " +

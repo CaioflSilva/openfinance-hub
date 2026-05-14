@@ -10,12 +10,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -41,26 +44,29 @@ public class TransactionController {
     }
 
     @GetMapping
-    @Operation(summary = "Listar todas as transações do usuário autenticado")
+    @Operation(summary = "Listar todas as transações do usuário autenticado (paginado)")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"),
+        @ApiResponse(responseCode = "200", description = "Página retornada com sucesso"),
         @ApiResponse(responseCode = "401", description = "Não autenticado")
     })
-    public ResponseEntity<List<TransactionResponse>> listAll(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(transactionService.listByUser(user));
+    public ResponseEntity<Page<TransactionResponse>> listAll(
+            @AuthenticationPrincipal User user,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(transactionService.listByUser(user, pageable));
     }
 
     @GetMapping("/account/{accountId}")
-    @Operation(summary = "Listar transações de uma conta específica")
+    @Operation(summary = "Listar transações de uma conta específica (paginado)")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"),
+        @ApiResponse(responseCode = "200", description = "Página retornada com sucesso"),
         @ApiResponse(responseCode = "403", description = "Conta pertence a outro usuário"),
         @ApiResponse(responseCode = "404", description = "Conta bancária não encontrada")
     })
-    public ResponseEntity<List<TransactionResponse>> listByAccount(
+    public ResponseEntity<Page<TransactionResponse>> listByAccount(
             @PathVariable UUID accountId,
-            @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(transactionService.listByAccount(accountId, user));
+            @AuthenticationPrincipal User user,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(transactionService.listByAccount(accountId, user, pageable));
     }
 
     @GetMapping("/{id}")

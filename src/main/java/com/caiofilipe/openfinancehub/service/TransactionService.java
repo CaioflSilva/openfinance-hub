@@ -20,7 +20,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.UUID;
 
 @Service
@@ -74,7 +76,7 @@ public class TransactionService {
         return toResponse(saved);
     }
 
-    public List<TransactionResponse> listByAccount(UUID accountId, User user) {
+    public Page<TransactionResponse> listByAccount(UUID accountId, User user, Pageable pageable) {
         BankAccount account = bankAccountRepository.findById(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Conta bancária não encontrada"));
 
@@ -82,13 +84,13 @@ public class TransactionService {
             throw new ForbiddenException("Acesso negado a esta conta bancária");
         }
 
-        return transactionRepository.findByBankAccountId(accountId)
-                .stream().map(this::toResponse).toList();
+        return transactionRepository.findByBankAccountId(accountId, pageable)
+                .map(this::toResponse);
     }
 
-    public List<TransactionResponse> listByUser(User user) {
-        return transactionRepository.findAllByUserId(user.getId())
-                .stream().map(this::toResponse).toList();
+    public Page<TransactionResponse> listByUser(User user, Pageable pageable) {
+        return transactionRepository.findAllByUserId(user.getId(), pageable)
+                .map(this::toResponse);
     }
 
     public TransactionResponse getById(UUID id, User user) {
