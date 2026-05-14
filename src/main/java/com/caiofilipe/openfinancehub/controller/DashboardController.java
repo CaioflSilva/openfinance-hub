@@ -4,6 +4,8 @@ import com.caiofilipe.openfinancehub.dto.response.DashboardSummaryResponse;
 import com.caiofilipe.openfinancehub.model.User;
 import com.caiofilipe.openfinancehub.service.DashboardService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,10 @@ public class DashboardController {
 
     @GetMapping("/summary")
     @Operation(summary = "Resumo consolidado de gastos por categoria (Redis cache 5 min)")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Resumo retornado com sucesso"),
+        @ApiResponse(responseCode = "401", description = "Não autenticado")
+    })
     public ResponseEntity<DashboardSummaryResponse> summary(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(dashboardService.getSummary(user));
     }

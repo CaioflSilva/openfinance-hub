@@ -5,6 +5,8 @@ import com.caiofilipe.openfinancehub.dto.response.BankAccountResponse;
 import com.caiofilipe.openfinancehub.model.User;
 import com.caiofilipe.openfinancehub.service.BankAccountService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,11 @@ public class BankAccountController {
 
     @PostMapping
     @Operation(summary = "Criar nova conta bancária")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Conta criada com sucesso"),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+        @ApiResponse(responseCode = "401", description = "Não autenticado")
+    })
     public ResponseEntity<BankAccountResponse> create(
             @Valid @RequestBody BankAccountRequest request,
             @AuthenticationPrincipal User user) {
@@ -34,12 +41,21 @@ public class BankAccountController {
 
     @GetMapping
     @Operation(summary = "Listar contas do usuário autenticado")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"),
+        @ApiResponse(responseCode = "401", description = "Não autenticado")
+    })
     public ResponseEntity<List<BankAccountResponse>> listAll(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(bankAccountService.listByUser(user));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar conta por ID (com ownership check)")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Conta encontrada"),
+        @ApiResponse(responseCode = "403", description = "Conta pertence a outro usuário"),
+        @ApiResponse(responseCode = "404", description = "Conta não encontrada")
+    })
     public ResponseEntity<BankAccountResponse> getById(
             @PathVariable UUID id,
             @AuthenticationPrincipal User user) {
@@ -48,6 +64,11 @@ public class BankAccountController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Remover conta bancária")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Conta removida com sucesso"),
+        @ApiResponse(responseCode = "403", description = "Conta pertence a outro usuário"),
+        @ApiResponse(responseCode = "404", description = "Conta não encontrada")
+    })
     public ResponseEntity<Void> delete(
             @PathVariable UUID id,
             @AuthenticationPrincipal User user) {
