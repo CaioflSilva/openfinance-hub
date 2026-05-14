@@ -98,17 +98,16 @@ Um banco consulta saldo milhões de vezes por dia. Ir ao PostgreSQL toda vez ser
 src/
 └── main/
     └── java/com/caiofilipe/openfinancehub/
-        ├── config/          # Configurações (Security, Redis, RabbitMQ)
+        ├── config/          # Configurações (RabbitMQ, Redis, OpenAPI)
         ├── controller/      # Endpoints REST
         ├── service/         # Regras de negócio
         ├── repository/      # Interfaces JPA
         ├── model/           # Entidades do banco de dados
         ├── dto/
+        │   ├── event/       # Eventos publicados no RabbitMQ
         │   ├── request/     # Objetos de entrada
         │   └── response/    # Objetos de saída
-        ├── messaging/
-        │   ├── producer/    # Publicadores de mensagens
-        │   └── consumer/    # Consumidores de filas
+        ├── messaging/       # Consumidores de filas (TransactionListener)
         ├── exception/       # Handlers globais de erro
         └── security/        # JWT Filter e configurações
 ```
