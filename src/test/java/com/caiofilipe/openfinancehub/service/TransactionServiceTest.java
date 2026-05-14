@@ -69,7 +69,7 @@ class TransactionServiceTest {
 
     @Test
     void create_debit_deductsBalanceCorrectly() {
-        when(bankAccountRepository.findById(accountId)).thenReturn(Optional.of(account));
+        when(bankAccountRepository.findByIdForUpdate(accountId)).thenReturn(Optional.of(account));
         when(bankAccountRepository.save(any())).thenReturn(account);
         when(transactionRepository.save(any())).thenAnswer(inv -> {
             Transaction t = inv.getArgument(0);
@@ -86,7 +86,7 @@ class TransactionServiceTest {
 
     @Test
     void create_insufficientBalance_throwsBusinessException() {
-        when(bankAccountRepository.findById(accountId)).thenReturn(Optional.of(account));
+        when(bankAccountRepository.findByIdForUpdate(accountId)).thenReturn(Optional.of(account));
 
         assertThatThrownBy(() -> transactionService.create(buildDebitRequest(new BigDecimal("999.00")), user))
                 .isInstanceOf(BusinessException.class)
@@ -97,7 +97,7 @@ class TransactionServiceTest {
 
     @Test
     void create_publishesEventToRabbitMQ() {
-        when(bankAccountRepository.findById(accountId)).thenReturn(Optional.of(account));
+        when(bankAccountRepository.findByIdForUpdate(accountId)).thenReturn(Optional.of(account));
         when(bankAccountRepository.save(any())).thenReturn(account);
         when(transactionRepository.save(any())).thenAnswer(inv -> {
             Transaction t = inv.getArgument(0);

@@ -34,7 +34,7 @@ public class TransactionService {
     @Transactional
     @CacheEvict(value = "dashboard-summary", key = "#user.id.toString()")
     public TransactionResponse create(TransactionRequest request, User user) {
-        BankAccount account = bankAccountRepository.findById(request.getBankAccountId())
+        BankAccount account = bankAccountRepository.findByIdForUpdate(request.getBankAccountId())
                 .orElseThrow(() -> new ResourceNotFoundException("Conta bancária não encontrada"));
 
         if (!account.getUser().getId().equals(user.getId())) {
