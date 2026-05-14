@@ -39,7 +39,6 @@ app:
 
 springdoc:
   api-docs:
-   
   swagger-ui:
     path: /swagger-ui.html
 
