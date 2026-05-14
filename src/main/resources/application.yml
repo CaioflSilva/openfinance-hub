@@ -38,7 +38,6 @@ app:
     expiration: ${JWT_EXPIRATION:86400000}
 
 springdoc:
-  api-docs:
   swagger-ui:
     path: /swagger-ui.html
 
