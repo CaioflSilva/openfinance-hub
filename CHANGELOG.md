@@ -7,6 +7,27 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.6.0] — 2026-05-13
+
+### Added
+
+- **Async flow completed** — `TransactionListener` now fetches the transaction by ID after consuming the RabbitMQ event, sets `status=COMPLETED` and `processedAt=now()`, and persists the update. Logs a warning and continues if the transaction is not found, avoiding dead-lettering valid messages (`TransactionListener`)
+- **Pagination on transaction listings** — `GET /api/transactions` and `GET /api/transactions/account/{id}` now accept `page`, `size` and `sort` query parameters via Spring `Pageable`. Default: `size=20`, `sort=createdAt,DESC`. Both endpoints return `Page<TransactionResponse>` with `content`, `totalElements`, `totalPages` and pagination metadata (`TransactionController`, `TransactionService`, `TransactionRepository`)
+- **Swagger Authorize button** — `@SecurityScheme(bearerAuth)` added via `OpenApiConfig` so the Swagger UI shows the JWT authorization dialog (`OpenApiConfig`)
+- **`@ApiResponse` on all controllers** — every endpoint now documents its possible HTTP response codes (200/201/400/401/403/404/409/422) directly in the OpenAPI spec (`AuthController`, `BankAccountController`, `TransactionController`, `DashboardController`)
+
+### Fixed
+
+- **Race condition on balance update** — `BankAccountRepository` now exposes `findByIdForUpdate()` with `@Lock(PESSIMISTIC_WRITE)`. `TransactionService.create()` uses this method so concurrent requests on the same account serialize at the database level instead of reading stale balance (`BankAccountRepository`, `TransactionService`)
+- **Internal error details leaked in 500 responses** — the generic exception handler now logs the full stack trace internally via `log.error()` and returns only `"Erro interno do servidor"` to the client, preventing exposure of class names or exception messages (`GlobalExceptionHandler`)
+- **`ddl-auto: update` in production config** — changed to `validate` so Hibernate verifies the schema on startup without mutating it. The test profile (`application-test.yml`) retains `create-drop` so the test suite continues to work without Flyway (`application.yml`)
+
+### Docs
+
+- README project structure corrected to match the actual source tree — removed non-existent `messaging/producer/` and `messaging/consumer/` subdirectories, added `dto/event/` (`README.md`)
+
+---
+
 ## [0.5.0] — 2026-05-10
 
 ### Added
